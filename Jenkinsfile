@@ -9,7 +9,7 @@ pipeline {
     }
 
     environment {
-        PROJECT_NAME = 'event-booking'
+        PROJECT_NAME = 'event-booking-management'
         COMPOSE_FILE = 'docker-compose.yml'
     }
 
