@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -11,6 +10,7 @@ pipeline {
     environment {
         PROJECT_NAME = 'event-booking-management'
         COMPOSE_FILE = 'docker-compose.yml'
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
     stages {
@@ -73,11 +73,27 @@ pipeline {
                 '''
             }
         }
+
+        stage('Check Kubernetes') {
+            steps {
+                sh '''
+                    set -eu
+
+                    echo "Checking Kubernetes node status..."
+                    /usr/local/bin/kubectl get nodes
+
+                    echo "Checking Kubernetes pods..."
+                    /usr/local/bin/kubectl get pods -A
+
+                    echo "Kubernetes connectivity successful."
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'SUCCESS: Event Booking deployment completed.'
+            echo 'SUCCESS: Event Booking deployment and Kubernetes connectivity check completed.'
         }
 
         failure {
@@ -89,3 +105,4 @@ pipeline {
         }
     }
 }
+
